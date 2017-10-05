@@ -3,6 +3,7 @@ package edu.syr.cyberseed.sage.integrationclient.tests;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.syr.cyberseed.sage.integrationclient.entities.MedicalRecord;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +82,7 @@ public class IntegrationTests {
         integrationTest3();
         integrationTest4();
         integrationTest5();
-        //integrationTest6();
+        integrationTest6();
         //integrationTest7();
         //integrationTest8();
         //integrationTest9();
@@ -391,6 +392,63 @@ public class IntegrationTests {
         }
         // print first record id
         System.out.println(recordId);
+
+        return;
+    }
+
+    private void integrationTest6 () {
+
+        smirkService = "/viewRecord";
+        url = smirkHost + smirkService;
+        requestUsername = "MBishop";
+        requestPassword = patientPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // create request with http headers
+        HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
+
+        // actually GET the API and get a string array back
+        log.debug("GET url: " + url);
+        log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
+        MedicalRecord medRecord = null;
+        try {
+            ResponseEntity<MedicalRecord> httpEntityResponse = restTemplate.exchange(url + "/" + recordId,
+                    HttpMethod.GET,
+                    postHeaders,
+                    MedicalRecord.class);
+            medRecord = httpEntityResponse.getBody();
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        // Print the API result data in the format specified by the integration test requirements
+        // print record, the MedicalRecord.toString() method specifies printing in the required way.
+        System.out.println("Record ID : " + medRecord.getId());
+        System.out.println("Record Type : " + medRecord.getRecord_type());
+        System.out.println("Record Date : " + medRecord.getDate());
+        System.out.println("Owner : " + medRecord.getOwner());
+        System.out.println("Patient : " + medRecord.getPatient());
+        System.out.println("Edit Permissions : " + medRecord.getEdit());
+        System.out.println("View Permissions : " +medRecord.getView());
+        System.out.println("Date : " ); //todo need subtype data
+        System.out.println("Doctor : "); //todo need subtype data
+        System.out.println("Notes : "); //todo need subtype data
 
         return;
     }
