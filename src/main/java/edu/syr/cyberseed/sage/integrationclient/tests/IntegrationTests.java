@@ -2,6 +2,7 @@ package edu.syr.cyberseed.sage.integrationclient.tests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.syr.cyberseed.sage.integrationclient.entities.MedicalRecord;
 import edu.syr.cyberseed.sage.integrationclient.entities.SuperSetOfAllMedicalRecordTypes;
@@ -22,7 +23,9 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class IntegrationTests {
@@ -312,6 +315,19 @@ public class IntegrationTests {
         objectNode.put("patientUsername", "MBishop");
         objectNode.put("doctorUsername", "KLibby");
         objectNode.put("notes", "Looks great for his age");
+        //edit permission users
+        ArrayNode editArrayNode = objectNode.putArray("edit");
+        editArrayNode.add("MBishop");
+        //view permission users
+        ArrayNode viewArrayNode = objectNode.putArray("view");
+        viewArrayNode.add("MBishop");
+        viewArrayNode.add("KLibby");
+
+        //ArrayList<String> editUserList = new ArrayList<String>();
+        //editUserList.add("MBishop");
+        //Map<String, Object> editUserListJson = new HashMap<String, Object>();
+        //editUserListJson.put("users", editUserList);
+
         String postData = objectNode.toString();
 
         // create full request with data and http headers
@@ -390,9 +406,13 @@ public class IntegrationTests {
         // Print the API result data in the format specified by the integration test requirements
         if (recordSummaryList.length > 0) {
             recordId = recordSummaryList[0].split(",")[0];
+            // print first record id
+            System.out.println(recordId);
         }
-        // print first record id
-        System.out.println(recordId);
+        else {
+            System.out.println("FAILED Test 5 - This user does not have access to list any records");
+        }
+
 
         return;
     }
