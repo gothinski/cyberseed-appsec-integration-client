@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.syr.cyberseed.sage.integrationclient.entities.MedicalRecord;
+import edu.syr.cyberseed.sage.integrationclient.entities.SuperSetOfAllMedicalRecordTypes;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -417,12 +418,12 @@ public class IntegrationTests {
         // actually GET the API and get a string array back
         log.debug("GET url: " + url);
         log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
-        MedicalRecord medRecord = null;
+        SuperSetOfAllMedicalRecordTypes medRecord = null;
         try {
-            ResponseEntity<MedicalRecord> httpEntityResponse = restTemplate.exchange(url + "/" + recordId,
+            ResponseEntity<SuperSetOfAllMedicalRecordTypes> httpEntityResponse = restTemplate.exchange(url + "/" + recordId,
                     HttpMethod.GET,
                     postHeaders,
-                    MedicalRecord.class);
+                    SuperSetOfAllMedicalRecordTypes.class);
             medRecord = httpEntityResponse.getBody();
         }
         catch (HttpClientErrorException e)
@@ -439,16 +440,48 @@ public class IntegrationTests {
 
         // Print the API result data in the format specified by the integration test requirements
         // print record, the MedicalRecord.toString() method specifies printing in the required way.
-        System.out.println("Record ID : " + medRecord.getId());
-        System.out.println("Record Type : " + medRecord.getRecord_type());
-        System.out.println("Record Date : " + medRecord.getDate());
-        System.out.println("Owner : " + medRecord.getOwner());
-        System.out.println("Patient : " + medRecord.getPatient());
-        System.out.println("Edit Permissions : " + medRecord.getEdit());
-        System.out.println("View Permissions : " +medRecord.getView());
-        System.out.println("Date : " ); //todo need subtype data
-        System.out.println("Doctor : "); //todo need subtype data
-        System.out.println("Notes : "); //todo need subtype data
+
+        // Print the main MedicalRecord data
+        System.out.println("Record ID : " + medRecord.getMedicalRecordId());
+        System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
+        System.out.println("Record Date : " + medRecord.getMedicalRecordDate());
+        System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
+        System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
+        System.out.println("Edit Permissions : " + medRecord.getMedicalRecordEdit());
+        System.out.println("View Permissions : " +medRecord.getMedicalRecordView());
+
+        // Now print the data from the record sub type
+        String recordSubType = medRecord.getMedicalRecordRecord_type();
+        switch (recordSubType) {
+            case "Doctor Exam":
+                System.out.println("Date : " + medRecord.getDoctorExamRecordExamDate());
+                System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
+                System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
+                break;
+
+            case "Test Result":
+                //todo
+                break;
+
+            case "Diagnosis":
+                //todo
+                break;
+
+            case "Insurance Claim":
+                //todo
+                break;
+
+            case "Patient Doctor Correspondence":
+                //todo
+                break;
+
+            case "Raw":
+                //todo
+                break;
+
+            default:
+                log.error("Record type not found: " + recordSubType);
+        }
 
         return;
     }
