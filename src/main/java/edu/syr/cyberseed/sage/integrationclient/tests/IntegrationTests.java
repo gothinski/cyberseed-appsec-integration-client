@@ -101,7 +101,7 @@ public class IntegrationTests {
         integrationTest21();
         integrationTest22();
         integrationTest23();
-        //integrationTest24();
+        integrationTest24();
         //integrationTest25();
         integrationTest26();
         integrationTest27();
