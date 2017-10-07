@@ -1093,6 +1093,162 @@ public class IntegrationTests {
         return;
     }
 
+    // Integration test 16
+    private void integrationTest16 () {
+
+        smirkService = "/addInsuranceClaimRecord";
+        url = smirkHost + smirkService;
+        requestUsername = "PGarcia";
+        requestPassword = insadminPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // Define the data we are submitting to the API
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", "2114563");
+        objectNode.put("record_date", "2017-08-14T00:00:00.000Z");
+        objectNode.put("date", "2017-09-03T00:00:00.000Z");
+        objectNode.put("patientUsername", "MBishop");
+        objectNode.put("medadUsername", "DLightman");
+        objectNode.put("status", "Filed");
+        objectNode.put("amount", "745.00");
+        //edit permission users
+        ArrayNode editArrayNode = objectNode.putArray("edit");
+        editArrayNode.add("PGarcia");
+        editArrayNode.add("DLightman");
+        //view permission users
+        ArrayNode viewArrayNode = objectNode.putArray("view");
+        viewArrayNode.add("PGarcia");
+        viewArrayNode.add("DLightman");
+
+        String postData = objectNode.toString();
+
+        // create full request with data and http headers
+        HttpEntity<String> postDataWithHeaders = new HttpEntity <String> (postData, httpHeaders);
+
+        // actually post the API and get a string back
+        log.debug("POST url: " + url);
+        log.debug("POST credentials: " + requestUsername + ":" + requestPassword);
+        log.debug("POST data: " + postData);
+        try {
+            returnedDataFromAPI = restTemplate.postForObject(url, postDataWithHeaders, String.class);
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        log.debug("API Returned: " + returnedDataFromAPI);
+
+        return;
+    }
+    //    end of test 16
+
+    //    begining of test 17
+    private void integrationTest17 () {
+        smirkService = "/viewRecord";
+        url = smirkHost + smirkService;
+        requestUsername = "DLightman";
+        requestPassword = medadminPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // create request with http headers
+        HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
+
+        // actually GET the API and get a string array back
+        log.debug("GET url: " + url);
+        log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
+        SuperSetOfAllMedicalRecordTypes medRecord = null;
+        try {
+            ResponseEntity<SuperSetOfAllMedicalRecordTypes> httpEntityResponse = restTemplate.exchange(url + "/" + "2114563",
+                    HttpMethod.GET,
+                    postHeaders,
+                    SuperSetOfAllMedicalRecordTypes.class);
+            medRecord = httpEntityResponse.getBody();
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        // Print the API result data in the format specified by the integration test requirements
+        // print record, the MedicalRecord.toString() method specifies printing in the required way.
+
+        // Print the main MedicalRecord data
+        System.out.println("Record ID : " + medRecord.getMedicalRecordId());
+        System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
+        System.out.println("Record Date : " + medRecord.getMedicalRecordDate());
+        System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
+        System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
+        System.out.println("Edit Permissions : " + medRecord.getMedicalRecordEdit());
+        System.out.println("View Permissions : " +medRecord.getMedicalRecordView());
+
+        // Now print the data from the record sub type
+        String recordSubType = medRecord.getMedicalRecordRecord_type();
+        switch (recordSubType) {
+            case "Doctor Exam":
+                //todo
+                break;
+
+            case "Test Result":
+                //todo
+                break;
+
+            case "Diagnosis Record":
+                //todo
+                break;
+
+            case "Insurance Claim":
+                System.out.println("Date : " + medRecord.getInsuranceClaimRecordClaimDate());
+                System.out.println("MedAdmin : " + medRecord.getInsuranceClaimRecordMadmin());
+                System.out.println("Amount : " + medRecord.getInsuranceClaimRecordClaimAmount());
+                System.out.println("Status : " + medRecord.getInsuranceClaimRecordStatus());
+                break;
+
+            case "Patient Doctor Correspondence":
+                //todo
+                break;
+
+            case "Raw":
+                //todo
+                break;
+
+            default:
+                log.error("Record type not found: " + recordSubType);
+        }
+
+        return;
+    }
+    //    end of test 17
+
     private void integrationTest18 () {
 
         smirkService = "/createCorrespondenceRecord";
@@ -1510,7 +1666,73 @@ public class IntegrationTests {
 
         return;
     }
+    // begin of test 24
 
+    private void integrationTest24 () {
+
+        requestUsername = "PGarcia";
+        requestPassword = insadminPassword;
+        recordId = "63481249";
+
+
+        smirkService = "/editRecordPerm";
+        url = smirkHost + smirkService;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // Define the data we are submitting to the API
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", recordId);
+        //edit permission users
+        ArrayNode editArrayNode = objectNode.putArray("edit");
+        editArrayNode.add("PGarcia");
+        editArrayNode.add("DLightman");
+        //view permission users
+        ArrayNode viewArrayNode = objectNode.putArray("view");
+        viewArrayNode.add("PGarcia");
+        viewArrayNode.add("MBishop");;
+
+        String postData = objectNode.toString();
+
+        // create full request with data and http headers
+        HttpEntity<String> postDataWithHeaders = new HttpEntity <String> (postData, httpHeaders);
+
+        // actually post the API and get a string back
+        log.debug("POST url: " + url);
+        log.debug("POST credentials: " + requestUsername + ":" + requestPassword);
+        log.debug("POST data: " + postData);
+        try {
+            returnedDataFromAPI = restTemplate.postForObject(url, postDataWithHeaders, String.class);
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        log.debug("API Returned: " + returnedDataFromAPI);
+
+        // Print the API result data in the format specified by the integration test requirements
+        // System Requirements Specification section 6.2 Expected printed results does not list
+        // any output for this service
+        //System.out.println("");
+
+        return;
+    }
+    // end of test 24
     private void integrationTest26 () {
 
         smirkService = "/editPerm";
