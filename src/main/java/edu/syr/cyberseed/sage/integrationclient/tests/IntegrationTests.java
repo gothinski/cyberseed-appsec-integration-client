@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.syr.cyberseed.sage.integrationclient.entities.SuperSetOfAllMedicalRecordTypes;
+import edu.syr.cyberseed.sage.integrationclient.entities.*;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,11 +83,11 @@ public class IntegrationTests {
         integrationTest4();
         integrationTest5();
         integrationTest6();
-        //integrationTest7();
+        integrationTest7();
         //integrationTest8();
         //integrationTest9();
-        //integrationTest10();
-        //integrationTest11();
+        integrationTest10();
+        integrationTest11();
         //integrationTest12();
         //integrationTest13();
         //integrationTest14();
@@ -502,6 +502,172 @@ public class IntegrationTests {
         return;
     }
 
+    private void integrationTest7 () {
+        String a[];
+        smirkService = "/viewRecoveryPhrase";
+        url = smirkHost + smirkService;
+        requestUsername = "DMurphy";
+        requestPassword = sysadminPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // create request with http headers
+        HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
+        Doctor d = new Doctor();
+        // actually GET the API and get a string array back
+        log.debug("GET url: " + url);
+        log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
+        try {
+            ResponseEntity<Doctor> httpEntityResponse = restTemplate.exchange(url + "/" + "KLibby",
+                    HttpMethod.GET,
+                    postHeaders,
+                    Doctor.class);
+            d=httpEntityResponse.getBody();
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        System.out.println(d.getRphrase());
+
+        // Print the API result data in the format specified by the integration test requirements
+        // print record, the MedicalRecord.toString() method specifies printing in the required way.
+
+        // Print the main MedicalRecord date
+
+        return;
+    }
+    private void integrationTest10 () {
+
+        smirkService = "/createNurse";
+        url = smirkHost + smirkService;
+        requestUsername = "KLibby";
+        requestPassword = doctorPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // Define the data we are submitting to the API
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("username", "KFlynn");
+        objectNode.put("password", nursePassword);
+        objectNode.put("fname", "Kevin");
+        objectNode.put("lname", "Flynn");
+        objectNode.put("pname", "The Gibson Associates");
+        objectNode.put("paddress", "1983 Aburn Road, Chicago, IL 60007");
+        objectNode.put("adoctors", "KLibby");
+        String postData = objectNode.toString();
+
+        // create full request with data and http headers
+        HttpEntity<String> postDataWithHeaders = new HttpEntity <String> (postData, httpHeaders);
+
+        // actually post the API and get a string back
+        log.debug("POST url: " + url);
+        log.debug("POST credentials: " + requestUsername + ":" + requestPassword);
+        log.debug("POST data: " + postData);
+        try {
+            returnedDataFromAPI = restTemplate.postForObject(url, postDataWithHeaders, String.class);
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        log.debug("API Returned: " + returnedDataFromAPI);
+
+        // Print the API result data in the format specified by the integration test requirements
+        // System Requirements Specification section 6.2 Expected printed results does not list
+        // any output for this service
+        //System.out.println("");
+
+        return;
+    }
+    private void integrationTest11 () {
+
+        smirkService = "/createMedAdmin";
+        url = smirkHost + smirkService;
+        requestUsername = "KLibby";
+        requestPassword = doctorPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // Define the data we are submitting to the API
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("username", "DLightman");
+        objectNode.put("password", medadminPassword);
+        objectNode.put("fname", "David");
+        objectNode.put("lname", "Lightman");
+        objectNode.put("pname", "Vangsness Insurance");
+        objectNode.put("paddress", "1983 Aburn Road, Chicago, IL 60007");
+        objectNode.put("adoctor", "KLibby");
+        objectNode.put("anurse", "KFlynn");
+        String postData = objectNode.toString();
+
+        // create full request with data and http headers
+        HttpEntity<String> postDataWithHeaders = new HttpEntity <String> (postData, httpHeaders);
+
+        // actually post the API and get a string back
+        log.debug("POST url: " + url);
+        log.debug("POST credentials: " + requestUsername + ":" + requestPassword);
+        log.debug("POST data: " + postData);
+        try {
+            returnedDataFromAPI = restTemplate.postForObject(url, postDataWithHeaders, String.class);
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        log.debug("API Returned: " + returnedDataFromAPI);
+
+        // Print the API result data in the format specified by the integration test requirements
+        // System Requirements Specification section 6.2 Expected printed results does not list
+        // any output for this service
+        //System.out.println("");
+
+        return;
+    }
     private void integrationTest15 () {
 
         smirkService = "/createInsAdmin";

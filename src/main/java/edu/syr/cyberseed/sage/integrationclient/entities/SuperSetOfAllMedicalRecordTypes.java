@@ -14,6 +14,7 @@ public class SuperSetOfAllMedicalRecordTypes {
     private String medicalRecordView;
     private String medicalRecordOwner;
     private String medicalRecordPatient;
+    private String RecoveryPhrase;
     private Date medicalRecordDate;
 
     // fields from DoctorExamRecord
