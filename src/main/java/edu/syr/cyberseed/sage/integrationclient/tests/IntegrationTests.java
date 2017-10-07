@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -88,7 +89,7 @@ public class IntegrationTests {
         //integrationTest9();
         integrationTest10();
         integrationTest11();
-        //integrationTest12();
+        integrationTest12();
         //integrationTest13();
         //integrationTest14();
         integrationTest15();
@@ -104,7 +105,7 @@ public class IntegrationTests {
         //integrationTest25();
         //integrationTest26();
         //integrationTest27();
-        //integrationTest28();
+        integrationTest28();
 
         System.out.println("");
         System.out.println("Integration Tests Complete");
@@ -668,6 +669,65 @@ public class IntegrationTests {
 
         return;
     }
+
+    private void integrationTest12 () {
+
+        smirkService = "/viewPatientProfile";
+        url = smirkHost + smirkService;
+        requestUsername = "DLightman";
+        requestPassword = medadminPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // create request with http headers
+        HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
+        User_patient u = new User_patient();
+        ArrayList<String> a = new ArrayList<String>();
+        // actually GET the API and get a string array back
+        log.debug("GET url: " + url);
+        log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
+        try {
+            ResponseEntity<ArrayList> httpEntityResponse = restTemplate.exchange(url + "/" + "MBishop",
+                    HttpMethod.GET,
+                    postHeaders,
+                    ArrayList.class);
+            a=httpEntityResponse.getBody();
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        System.out.println("Username : "+a.get(0));
+        System.out.println("Roles : "+a.get(3));
+        System.out.println("Permissions : "+u.getPermissions());
+        System.out.println("First Name : "+a.get(1));
+        System.out.println("Last Name : "+a.get(2));
+        System.out.println("DOB : "+a.get(6));
+        System.out.println("SSN : "+a.get(5));
+        System.out.println("Address : "+a.get(4));
+
+
+        // Print the API result data in the format specified by the integration test requirements
+        // print record, the MedicalRecord.toString() method specifies printing in the required way.
+
+        // Print the main MedicalRecord date
+
+        return;
+    }
     private void integrationTest15 () {
 
         smirkService = "/createInsAdmin";
@@ -878,6 +938,65 @@ public class IntegrationTests {
             default:
                 log.error("Record type not found: " + recordSubType);
         }
+
+        return;
+    }
+
+    private void integrationTest28 () {
+
+        smirkService = "/viewPatientProfile";
+        url = smirkHost + smirkService;
+        requestUsername = "DLightman";
+        requestPassword = medadminPassword;
+
+        // Create HTTP headers that specify the auth for this request and the content type
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String auth = requestUsername + ":" + requestPassword;
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")) );
+        String authHeader = "Basic " + new String( encodedAuth );
+        httpHeaders.set("Authorization", authHeader);
+        httpHeaders.set("Content-Type", "application/json");
+
+        // create request with http headers
+        HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
+        User_patient u = new User_patient();
+        ArrayList<String> a = new ArrayList<String>();
+        // actually GET the API and get a string array back
+        log.debug("GET url: " + url);
+        log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
+        try {
+            ResponseEntity<ArrayList> httpEntityResponse = restTemplate.exchange(url + "/" + "MBishop",
+                    HttpMethod.GET,
+                    postHeaders,
+                    ArrayList.class);
+            a=httpEntityResponse.getBody();
+        }
+        catch (HttpClientErrorException e)
+        {
+
+            log.error("Error message from SMIRK API:  " + e.getResponseBodyAsString());
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("error:  " + e.getMessage());
+            return;
+        }
+
+        System.out.println("Username : "+a.get(0));
+        System.out.println("Roles : "+a.get(3));
+        System.out.println("Permissions : "+u.getPermissions());
+        System.out.println("First Name : "+a.get(1));
+        System.out.println("Last Name : "+a.get(2));
+        System.out.println("DOB : "+a.get(6));
+        System.out.println("SSN : "+a.get(5));
+        System.out.println("Address : "+a.get(4));
+
+
+        // Print the API result data in the format specified by the integration test requirements
+        // print record, the MedicalRecord.toString() method specifies printing in the required way.
+
+        // Print the main MedicalRecord date
 
         return;
     }
