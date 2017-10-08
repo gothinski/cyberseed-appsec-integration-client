@@ -2384,16 +2384,38 @@ public class IntegrationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.print("Permissions : "); ;
+        System.out.print("Roles : "); ;
         for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
             System.out.print(" " + viewer);
         }System.out.println();
 
 
-        System.out.println("Permissions : "+a.get(4));
+        String viewersJsonList1 = a.get(4);
+        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
+                    new TypeReference<Map<String, Object>>() {
+                    });
+            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("roles");
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.print("Permissions : "); ;
+        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
+            System.out.print(" " + viewer);
+        }System.out.println();
+
         System.out.println("First Name : "+a.get(1));
         System.out.println("Last Name : "+a.get(2));
-        System.out.println("DOB : "+a.get(7));
+        System.out.println("DOB : "+ a.get(7));
         System.out.println("SSN : "+a.get(6));
         System.out.println("Address : "+a.get(5));
 
