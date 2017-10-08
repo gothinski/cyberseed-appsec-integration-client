@@ -28,8 +28,11 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -904,7 +907,18 @@ public class IntegrationTests {
 
         System.out.println("First Name : "+patientArrayList.get(1));
         System.out.println("Last Name : "+patientArrayList.get(2));
-        System.out.println("DOB : "+patientArrayList.get(7));
+
+        // convert date as string to date, and print it formatted
+        String dobDateString = patientArrayList.get(7);
+        String simplerDateString = dobDateString.substring(0, Math.min(dobDateString.length(), 10));
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date dobDate = df.parse(simplerDateString);
+            System.out.println("DOB : " + new SimpleDateFormat("MM/dd/yy").format(dobDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         final Pattern ssnFormat = Pattern.compile("^(\\d{3})(\\d{2})(\\d{4})$");
         Matcher m = ssnFormat.matcher(patientArrayList.get(6));
         if (m.find()) {
@@ -2073,7 +2087,18 @@ public class IntegrationTests {
 
         System.out.println("First Name : "+patientArrayList.get(1));
         System.out.println("Last Name : "+patientArrayList.get(2));
-        System.out.println("DOB : "+ patientArrayList.get(7));
+
+        // convert date as string to date, and print it formatted
+        String dobDateString = patientArrayList.get(7);
+        String simplerDateString = dobDateString.substring(0, Math.min(dobDateString.length(), 10));
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date dobDate = df.parse(simplerDateString);
+            System.out.println("DOB : " + new SimpleDateFormat("MM/dd/yy").format(dobDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         final Pattern ssnFormat = Pattern.compile("^(\\d{3})(\\d{2})(\\d{4})$");
         Matcher m = ssnFormat.matcher(patientArrayList.get(6));
         if (m.find()) {
