@@ -487,13 +487,13 @@ public class IntegrationTests {
         // Now print the data from the record subtype
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
-            case "Doctor Exam":
+            case "Doctor Exam Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDoctorExamRecordExamDate()));
                 System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
                 break;
 
-            case "Test Result":
+            case "Test Result Record":
                 //todo
                 break;
 
@@ -501,7 +501,7 @@ public class IntegrationTests {
                 //todo
                 break;
 
-            case "Insurance Claim":
+            case "Insurance Claim Record":
                 //todo
                 break;
 
@@ -695,11 +695,11 @@ public class IntegrationTests {
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
-            case "Doctor Exam":
+            case "Doctor Exam Record":
                 //todo
                 break;
 
-            case "Test Result":
+            case "Test Result Record":
                 //todo
                 break;
 
@@ -709,7 +709,7 @@ public class IntegrationTests {
                 System.out.println("Notes : " + medRecord.getDiagnosisRecordDiagnosis());
                 break;
 
-            case "Insurance Claim":
+            case "Insurance Claim Record":
                 //todo
                 break;
 
@@ -1040,11 +1040,11 @@ public class IntegrationTests {
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
-            case "Doctor Exam":
+            case "Doctor Exam Record":
                 //todo
                 break;
 
-            case "Test Result":
+            case "Test Result Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getTestResultRecorddate()));
                 System.out.println("Doctor : " + medRecord.getTestResultRecordDoctor());
                 System.out.println("Lab : " + medRecord.getTestResultRecordLab());
@@ -1054,7 +1054,7 @@ public class IntegrationTests {
             case "Diagnosis Record":
                 break;
 
-            case "Insurance Claim":
+            case "Insurance Claim Record":
                 //todo
                 break;
 
@@ -1160,11 +1160,11 @@ public class IntegrationTests {
         objectNode.put("amount", "745.00");
         //edit permission users
         ArrayNode editArrayNode = objectNode.putArray("edit");
-        editArrayNode.add("PGarcia");
+        //editArrayNode.add("PGarcia");
         editArrayNode.add("DLightman");
         //view permission users
         ArrayNode viewArrayNode = objectNode.putArray("view");
-        viewArrayNode.add("PGarcia");
+        //viewArrayNode.add("PGarcia");
         viewArrayNode.add("DLightman");
 
         String postData = objectNode.toString();
@@ -1259,11 +1259,11 @@ public class IntegrationTests {
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
-            case "Doctor Exam":
+            case "Doctor Exam Record":
                 //todo
                 break;
 
-            case "Test Result":
+            case "Test Result Record":
                 //todo
                 break;
 
@@ -1271,7 +1271,7 @@ public class IntegrationTests {
                 //todo
                 break;
 
-            case "Insurance Claim":
+            case "Insurance Claim Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getInsuranceClaimRecordClaimDate()));
                 System.out.println("MedAdmin : " + medRecord.getInsuranceClaimRecordMadmin());
                 System.out.println("Amount : " + medRecord.getInsuranceClaimRecordClaimAmount());
@@ -1695,13 +1695,13 @@ public class IntegrationTests {
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
-            case "Doctor Exam":
+            case "Doctor Exam Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDoctorExamRecordExamDate()));
                 System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
                 break;
 
-            case "Test Result":
+            case "Test Result Record":
                 //todo
                 break;
 
@@ -1709,7 +1709,7 @@ public class IntegrationTests {
                 //todo
                 break;
 
-            case "Insurance Claim":
+            case "Insurance Claim Record":
                 //todo
                 break;
 
@@ -1860,13 +1860,13 @@ public class IntegrationTests {
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
-            case "Doctor Exam":
+            case "Doctor Exam Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDoctorExamRecordExamDate()));
                 System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
                 break;
 
-            case "Test Result":
+            case "Test Result Record":
                 //todo
                 break;
 
@@ -1874,7 +1874,7 @@ public class IntegrationTests {
                 //todo
                 break;
 
-            case "Insurance Claim":
+            case "Insurance Claim Record":
                 //todo
                 break;
 
