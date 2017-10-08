@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class IntegrationTests {
@@ -472,7 +474,7 @@ public class IntegrationTests {
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
@@ -488,7 +490,7 @@ public class IntegrationTests {
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
             case "Doctor Exam Record":
-                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDoctorExamRecordExamDate()));
+                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getDoctorExamRecordExamDate()));
                 System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
                 break;
@@ -680,7 +682,7 @@ public class IntegrationTests {
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
@@ -704,7 +706,7 @@ public class IntegrationTests {
                 break;
 
             case "Diagnosis Record":
-                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDiagnosisRecordDate()));
+                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getDiagnosisRecordDate()));
                 System.out.println("Doctor : " + medRecord.getDiagnosisRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDiagnosisRecordDiagnosis());
                 break;
@@ -903,7 +905,11 @@ public class IntegrationTests {
         System.out.println("First Name : "+patientArrayList.get(1));
         System.out.println("Last Name : "+patientArrayList.get(2));
         System.out.println("DOB : "+patientArrayList.get(7));
-        System.out.println("SSN : "+patientArrayList.get(6));
+        final Pattern ssnFormat = Pattern.compile("^(\\d{3})(\\d{2})(\\d{4})$");
+        Matcher m = ssnFormat.matcher(patientArrayList.get(6));
+        if (m.find()) {
+            System.out.println("SSN : " + m.group(1) + "-" + m.group(2) + "-" +m.group(3));
+        }
         System.out.println("Address : "+patientArrayList.get(5));
 
 
@@ -1025,7 +1031,7 @@ public class IntegrationTests {
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
@@ -1045,7 +1051,7 @@ public class IntegrationTests {
                 break;
 
             case "Test Result Record":
-                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getTestResultRecorddate()));
+                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getTestResultRecorddate()));
                 System.out.println("Doctor : " + medRecord.getTestResultRecordDoctor());
                 System.out.println("Lab : " + medRecord.getTestResultRecordLab());
                 System.out.println("Notes : " + medRecord.getTestResultRecordnotes());
@@ -1244,7 +1250,7 @@ public class IntegrationTests {
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
@@ -1272,7 +1278,7 @@ public class IntegrationTests {
                 break;
 
             case "Insurance Claim Record":
-                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getInsuranceClaimRecordClaimDate()));
+                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getInsuranceClaimRecordClaimDate()));
                 System.out.println("MedAdmin : " + medRecord.getInsuranceClaimRecordMadmin());
                 System.out.println("Amount : " + medRecord.getInsuranceClaimRecordClaimAmount());
                 System.out.println("Status : " + medRecord.getInsuranceClaimRecordStatus());
@@ -1524,7 +1530,7 @@ public class IntegrationTests {
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
@@ -1549,7 +1555,7 @@ public class IntegrationTests {
                     System.out.println("Notes:");
                     for (CorrespondenceRecord note : correspondenceRecordNoteList) {
                         if (note.getNote_date() != null) {
-                            System.out.println("        Date: " +  new SimpleDateFormat("MM/dd/yyyy").format(note.getNote_date()));
+                            System.out.println("        Date: " +  new SimpleDateFormat("MM/dd/yy").format(note.getNote_date()));
                         }
                         if (note.getNote_text() != null) {
                             System.out.println("        Note: " + note.getNote_text());
@@ -1680,7 +1686,7 @@ public class IntegrationTests {
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type()+" Record");
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
@@ -1696,7 +1702,7 @@ public class IntegrationTests {
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
             case "Doctor Exam Record":
-                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDoctorExamRecordExamDate()));
+                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getDoctorExamRecordExamDate()));
                 System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
                 break;
@@ -1844,7 +1850,7 @@ public class IntegrationTests {
 
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type()+" Record");
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
@@ -1861,7 +1867,7 @@ public class IntegrationTests {
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
             case "Doctor Exam Record":
-                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getDoctorExamRecordExamDate()));
+                System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getDoctorExamRecordExamDate()));
                 System.out.println("Doctor : " + medRecord.getDoctorExamRecordDoctor());
                 System.out.println("Notes : " + medRecord.getDoctorExamRecordNotes());
                 break;
@@ -2068,7 +2074,11 @@ public class IntegrationTests {
         System.out.println("First Name : "+patientArrayList.get(1));
         System.out.println("Last Name : "+patientArrayList.get(2));
         System.out.println("DOB : "+ patientArrayList.get(7));
-        System.out.println("SSN : "+patientArrayList.get(6));
+        final Pattern ssnFormat = Pattern.compile("^(\\d{3})(\\d{2})(\\d{4})$");
+        Matcher m = ssnFormat.matcher(patientArrayList.get(6));
+        if (m.find()) {
+            System.out.println("SSN : " + m.group(1) + "-" + m.group(2) + "-" +m.group(3));
+        }
         System.out.println("Address : "+patientArrayList.get(5));
 
 
