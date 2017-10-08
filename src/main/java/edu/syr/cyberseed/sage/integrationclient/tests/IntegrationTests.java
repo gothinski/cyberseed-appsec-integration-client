@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1294,7 +1295,9 @@ public class IntegrationTests {
             case "Insurance Claim Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getInsuranceClaimRecordClaimDate()));
                 System.out.println("MedAdmin : " + medRecord.getInsuranceClaimRecordMadmin());
-                System.out.println("Amount : " + medRecord.getInsuranceClaimRecordClaimAmount());
+                DecimalFormat df = new DecimalFormat("0.00");
+                df.setMaximumFractionDigits(2);
+                System.out.println("Amount : " + df.format(medRecord.getInsuranceClaimRecordClaimAmount()));
                 System.out.println("Status : " + medRecord.getInsuranceClaimRecordStatus());
                 break;
 
