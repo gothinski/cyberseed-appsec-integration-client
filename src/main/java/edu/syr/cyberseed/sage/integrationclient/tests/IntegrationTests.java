@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -475,58 +476,15 @@ public class IntegrationTests {
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
 
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }
-        System.out.println();
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }
-        System.out.println();
-        // get the edit permissions and view permissions json and extract usernames from there
-
-
-        // Now print the data from the record sub type
+        // Now print the data from the record subtype
         String recordSubType = medRecord.getMedicalRecordRecord_type();
         switch (recordSubType) {
             case "Doctor Exam":
@@ -725,51 +683,14 @@ public class IntegrationTests {
         System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }
-        System.out.println();
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
+
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
@@ -944,7 +865,7 @@ public class IntegrationTests {
         // create request with http headers
         HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
         User_patient u = new User_patient();
-        ArrayList<String> a = new ArrayList<String>();
+        ArrayList<String> patientArrayList = new ArrayList<String>();
         // actually GET the API and get a string array back
         log.debug("GET url: " + url);
         log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
@@ -953,7 +874,7 @@ public class IntegrationTests {
                     HttpMethod.GET,
                     postHeaders,
                     ArrayList.class);
-            a=httpEntityResponse.getBody();
+            patientArrayList=httpEntityResponse.getBody();
         }
         catch (HttpClientErrorException e)
         {
@@ -966,69 +887,24 @@ public class IntegrationTests {
             log.error("error:  " + e.getMessage());
             return;
         }
-        System.out.println("Username : "+a.get(0));
+        System.out.println("Username : "+ patientArrayList.get(0));
 
-        String viewersJsonList = a.get(3);
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("roles");
+        String roleList = createCommaDelimitedStringFromNamedJsonList(patientArrayList.get(3), "roles");
+        System.out.println("Roles: " + roleList);
+
+        String permissionList = createCommaDelimitedStringFromNamedJsonList(patientArrayList.get(4), "roles");
+        if (StringUtils.isEmpty(permissionList)) {
+            System.out.println("Permissions: None");
         }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Roles : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }
-        System.out.println();
-        String str="";
-        if(a.get(4).contains("NONE")) {
-           str = "ROLE_NONE";
-        }
-        else
-            {
-            String viewersJsonList1 = a.get(3);
-            List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-            try {
-                ObjectMapper mapper = new ObjectMapper();
-                Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                        new TypeReference<Map<String, Object>>() {
-                        });
-                listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("roles");
-            }
-            catch (JsonGenerationException e) {
-                e.printStackTrace();
-            } catch (JsonMappingException e) {
-                e.printStackTrace();
-            } catch (JsonParseException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.print("Roles : "); ;
-            for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-                System.out.print(" " + viewer);
-            }
-            System.out.println();
+        else {
+            System.out.println("Permissions: " + permissionList);
         }
 
-        System.out.println("Permissions: " + str);
-
-        System.out.println("First Name : "+a.get(1));
-        System.out.println("Last Name : "+a.get(2));
-        System.out.println("DOB : "+a.get(7));
-        System.out.println("SSN : "+a.get(6));
-        System.out.println("Address : "+a.get(5));
+        System.out.println("First Name : "+patientArrayList.get(1));
+        System.out.println("Last Name : "+patientArrayList.get(2));
+        System.out.println("DOB : "+patientArrayList.get(7));
+        System.out.println("SSN : "+patientArrayList.get(6));
+        System.out.println("Address : "+patientArrayList.get(5));
 
 
         // Print the API result data in the format specified by the integration test requirements
@@ -1152,51 +1028,14 @@ public class IntegrationTests {
         System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }System.out.println();
 
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
+
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
@@ -1408,51 +1247,14 @@ public class IntegrationTests {
         System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yyyy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }System.out.println();
 
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
+
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
@@ -1726,51 +1528,13 @@ public class IntegrationTests {
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
 
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
@@ -1785,7 +1549,7 @@ public class IntegrationTests {
                     System.out.println("Notes:");
                     for (CorrespondenceRecord note : correspondenceRecordNoteList) {
                         if (note.getNote_date() != null) {
-                            System.out.println("Date: " +  new SimpleDateFormat("MM/dd/yyyy").format(note.getNote_date()));
+                            System.out.println("        Date: " +  new SimpleDateFormat("MM/dd/yyyy").format(note.getNote_date()));
                         }
                         if (note.getNote_text() != null) {
                             System.out.println("        Note: " + note.getNote_text());
@@ -1920,51 +1684,13 @@ public class IntegrationTests {
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
 
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
@@ -2123,51 +1849,13 @@ public class IntegrationTests {
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
-        String viewersJsonList = medRecord.getMedicalRecordEdit();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Edit Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String editorsJsonList = medRecord.getMedicalRecordEdit();
+        String editorsCsv = createCommaDelimitedStringFromNamedJsonList(editorsJsonList, "users");
+        System.out.println("Edit Permissions : " + editorsCsv);
 
-        String viewersJsonList1 = medRecord.getMedicalRecordView();
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("users");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("View Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String viewersJsonList = medRecord.getMedicalRecordView();
+        String viewersCsv = createCommaDelimitedStringFromNamedJsonList(viewersJsonList, "users");
+        System.out.println("View Permissions : " + viewersCsv);
 
         // Now print the data from the record sub type
         String recordSubType = medRecord.getMedicalRecordRecord_type();
@@ -2341,7 +2029,7 @@ public class IntegrationTests {
         // create request with http headers
         HttpEntity<String> postHeaders = new HttpEntity <String> (httpHeaders);
         User_patient u = new User_patient();
-        ArrayList<String> a = new ArrayList<String>();
+        ArrayList<String> patientArrayList = new ArrayList<String>();
         // actually GET the API and get a string array back
         log.debug("GET url: " + url);
         log.debug("GET credentials: " + requestUsername + ":" + requestPassword);
@@ -2350,7 +2038,7 @@ public class IntegrationTests {
                     HttpMethod.GET,
                     postHeaders,
                     ArrayList.class);
-            a=httpEntityResponse.getBody();
+            patientArrayList=httpEntityResponse.getBody();
         }
         catch (HttpClientErrorException e)
         {
@@ -2364,60 +2052,24 @@ public class IntegrationTests {
             return;
         }
 
-        System.out.println("Username : "+a.get(0));
+        System.out.println("Username : "+patientArrayList.get(0));
 
-        String viewersJsonList = a.get(3);
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord = (List<String>) mapObject.get("roles");
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.print("Roles : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord) {
-            System.out.print(" " + viewer);
-        }System.out.println();
+        String roleList = createCommaDelimitedStringFromNamedJsonList(patientArrayList.get(3), "roles");
+        System.out.println("Roles: " + roleList);
 
-
-        String viewersJsonList1 = a.get(4);
-        List<String> listOfUsersThatHaveViewPermissionsToThisRecord1 = new ArrayList<String>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapObject = mapper.readValue(viewersJsonList1,
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            listOfUsersThatHaveViewPermissionsToThisRecord1 = (List<String>) mapObject.get("roles");
+        String permissionList = createCommaDelimitedStringFromNamedJsonList(patientArrayList.get(4), "roles");
+        if (StringUtils.isEmpty(permissionList)) {
+            System.out.println("Permissions: None");
         }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        else {
+            System.out.println("Permissions: " + permissionList);
         }
-        System.out.print("Permissions : "); ;
-        for (String viewer : listOfUsersThatHaveViewPermissionsToThisRecord1) {
-            System.out.print(" " + viewer);
-        }System.out.println();
 
-        System.out.println("First Name : "+a.get(1));
-        System.out.println("Last Name : "+a.get(2));
-        System.out.println("DOB : "+ a.get(7));
-        System.out.println("SSN : "+a.get(6));
-        System.out.println("Address : "+a.get(5));
+        System.out.println("First Name : "+patientArrayList.get(1));
+        System.out.println("Last Name : "+patientArrayList.get(2));
+        System.out.println("DOB : "+ patientArrayList.get(7));
+        System.out.println("SSN : "+patientArrayList.get(6));
+        System.out.println("Address : "+patientArrayList.get(5));
 
 
         // Print the API result data in the format specified by the integration test requirements
@@ -2427,4 +2079,35 @@ public class IntegrationTests {
 
         return;
     }
+
+    private String createCommaDelimitedStringFromNamedJsonList(String jsonList, String listLabel) {
+        if (StringUtils.isEmpty(jsonList) || StringUtils.isEmpty(listLabel)) {
+            return "";
+        }
+        List<String> listOfThings = new ArrayList<String>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> mapObject = mapper.readValue(jsonList,
+                    new TypeReference<Map<String, Object>>() {
+                    });
+            if (((List<String>) mapObject.get(listLabel)) != null) {
+                listOfThings = (List<String>) mapObject.get(listLabel);
+            }
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String[] thingsArray = new String[listOfThings.size()];
+        thingsArray = listOfThings.toArray(thingsArray);
+        String csv = StringUtils.arrayToCommaDelimitedString(thingsArray);
+        String csvWithSpaces = csv.replaceAll(",",", ");
+        return csvWithSpaces;
+    }
+
 }
