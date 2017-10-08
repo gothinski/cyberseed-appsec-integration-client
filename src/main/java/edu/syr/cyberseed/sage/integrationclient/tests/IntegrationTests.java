@@ -261,7 +261,7 @@ public class IntegrationTests {
         objectNode.put("password", patientPassword);
         objectNode.put("fname", "Martin");
         objectNode.put("lname", "Bishop");
-        objectNode.put("dob", "1936-08-18T00:00:00.000Z");
+        objectNode.put("dob", "1936-08-18T12:00:00.000Z");
         objectNode.put("ssn", "312124253");
         objectNode.put("address", "145 Redford Drive, Baltimore, MD 21234");
         String postData = objectNode.toString();
@@ -317,8 +317,8 @@ public class IntegrationTests {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "9123245");
-        objectNode.put("date", "2017-09-04T00:00:00.000Z");
-        objectNode.put("examDate", "2017-09-03T00:00:00.000Z");
+        objectNode.put("date", "2017-09-04T12:00:00.000Z");
+        objectNode.put("examDate", "2017-09-03T12:00:00.000Z");
         objectNode.put("patientUsername", "MBishop");
         objectNode.put("doctorUsername", "KLibby");
         objectNode.put("notes", "Looks great for his age");
@@ -632,8 +632,8 @@ public class IntegrationTests {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "832942");
-        objectNode.put("date", "2017-09-07T00:00:00.000Z");
-        objectNode.put("diagnosisDate", "2017-09-04T00:00:00.000Z");
+        objectNode.put("date", "2017-09-07T12:00:00.000Z");
+        objectNode.put("diagnosisDate", "2017-09-04T12:00:00.000Z");
         objectNode.put("patientUsername", "MBishop");
         objectNode.put("doctorUsername", "KLibby");
         objectNode.put("diagnosis", "Positive for The Sting");
@@ -1058,8 +1058,8 @@ public class IntegrationTests {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "5434567");
-        objectNode.put("date", "2017-09-04T00:00:00.000Z");
-        objectNode.put("testDate", "2017-03-17T00:00:00.000Z");
+        objectNode.put("date", "2017-09-04T12:00:00.000Z");
+        objectNode.put("testDate", "2017-03-17T12:00:00.000Z");
         objectNode.put("patientUsername", "MBishop");
         objectNode.put("doctorUsername", "KLibby");
         objectNode.put("lab", "ENCOM");
@@ -1313,8 +1313,8 @@ public class IntegrationTests {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "2114563");
-        objectNode.put("ins_date", "2017-08-14T00:00:00.000Z");
-        objectNode.put("date", "2017-09-03T00:00:00.000Z");
+        objectNode.put("ins_date", "2017-08-14T12:00:00.000Z");
+        objectNode.put("date", "2017-09-03T12:00:00.000Z");
         objectNode.put("patientUsername", "MBishop");
         objectNode.put("medadUsername", "DLightman");
         objectNode.put("status", "Filed");
