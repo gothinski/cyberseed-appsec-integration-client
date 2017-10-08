@@ -2027,13 +2027,13 @@ public class IntegrationTests {
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", recordId);
         //edit permission users
-        ArrayNode editArrayNode = objectNode.putArray("edit");
+        ArrayNode editArrayNode = objectNode.putArray("editors");
         editArrayNode.add("PGarcia");
-        editArrayNode.add("DLightman");
         //view permission users
-        ArrayNode viewArrayNode = objectNode.putArray("view");
+        ArrayNode viewArrayNode = objectNode.putArray("viewers");
         viewArrayNode.add("PGarcia");
-        viewArrayNode.add("MBishop");;
+        viewArrayNode.add("MBishop");
+        editArrayNode.add("DLightman");
 
         String postData = objectNode.toString();
 
