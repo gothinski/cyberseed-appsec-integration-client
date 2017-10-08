@@ -18,6 +18,11 @@ public class CorrespondenceRecord {
     private String doctor;
     private Date note_date;
     private String note_text;
+
+    void getDoctor(String d)
+    {
+        this.doctor=d;
+    }
     private CorrespondenceRecord(){}
 
     public CorrespondenceRecord(Integer id, String doctor)
