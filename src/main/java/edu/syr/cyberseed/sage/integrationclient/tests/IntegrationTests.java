@@ -91,6 +91,10 @@ public class IntegrationTests {
         ArrayList<String> recordSummaryList = new ArrayList<String>();
 
         System.out.println("");
+        System.out.println("Note: *Adding* users and *Adding* records that already exist is not allowed so these");
+        System.out.println("tests will fail on subsequent runs if you first do not remove the user and record");
+        System.out.println("data you created.");
+        System.out.println("");
         System.out.println("Starting Integration Tests");
         System.out.println("");
 
@@ -956,7 +960,7 @@ public class IntegrationTests {
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "5434567");
         objectNode.put("date", "2017-09-04T12:00:00.000Z");
-        objectNode.put("testDate", "2017-03-17T12:00:00.000Z");
+        objectNode.put("testDate", "2017-09-03T12:00:00.000Z");
         objectNode.put("patientUsername", "MBishop");
         objectNode.put("doctorUsername", "KLibby");
         objectNode.put("lab", "ENCOM");
@@ -1998,7 +2002,7 @@ public class IntegrationTests {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("username", "MBishop");
-        objectNode.put("dob", "1978-09-01");
+        objectNode.put("dob", "1978-09-01T12:00:00.000Z");
         String postData = objectNode.toString();
 
         // create full request with data and http headers
