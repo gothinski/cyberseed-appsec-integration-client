@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import edu.syr.cyberseed.sage.integrationclient.entities.*;
+import edu.syr.cyberseed.sage.integrationclient.entities.CorrespondenceRecord;
+import edu.syr.cyberseed.sage.integrationclient.entities.Doctor;
+import edu.syr.cyberseed.sage.integrationclient.entities.SuperSetOfAllMedicalRecordTypes;
+import edu.syr.cyberseed.sage.integrationclient.entities.User_patient;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -712,7 +712,7 @@ public class IntegrationTests {
             case "Diagnosis Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getDiagnosisRecordDate()));
                 System.out.println("Doctor : " + medRecord.getDiagnosisRecordDoctor());
-                System.out.println("Notes : " + medRecord.getDiagnosisRecordDiagnosis());
+                System.out.println("Diagnosis : " + medRecord.getDiagnosisRecordDiagnosis());
                 break;
 
             case "Insurance Claim Record":
@@ -1294,7 +1294,7 @@ public class IntegrationTests {
 
             case "Insurance Claim Record":
                 System.out.println("Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getInsuranceClaimRecordClaimDate()));
-                System.out.println("MedAdmin : " + medRecord.getInsuranceClaimRecordMadmin());
+                System.out.println("Medical Administrator : " + medRecord.getInsuranceClaimRecordMadmin());
                 DecimalFormat df = new DecimalFormat("0.00");
                 df.setMaximumFractionDigits(2);
                 System.out.println("Amount : " + df.format(medRecord.getInsuranceClaimRecordClaimAmount()));
