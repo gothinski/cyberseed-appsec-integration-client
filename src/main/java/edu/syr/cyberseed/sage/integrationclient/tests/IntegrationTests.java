@@ -1871,8 +1871,8 @@ public class IntegrationTests {
 
         // Print the main MedicalRecord data
         System.out.println("Record ID : " + medRecord.getMedicalRecordId());
-        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Record Type : " + medRecord.getMedicalRecordRecord_type()+" Record");
+        System.out.println("Record Date : " + new SimpleDateFormat("MM/dd/yy").format(medRecord.getMedicalRecordDate()));
         System.out.println("Owner : " + medRecord.getMedicalRecordOwner());
         System.out.println("Patient : " + medRecord.getMedicalRecordPatient());
 
