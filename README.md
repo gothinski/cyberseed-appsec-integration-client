@@ -8,6 +8,10 @@ Backdoor Client (https://github.com/kjfallon/cyberseed-appsec-backdoor-client)
 
 ### Integration Test Client
 
+Teams will provide an Integration Test Client as a separate Docker image that shows the satisfaction of the following flows exercising the SMIRK Server Application services. 
+
+This client must actually exercise the SMIRK Server Application services and only print out values returned from these services. CyberSeed hosts will be checking the application code to be sure that this client is not simply echoing the expected results which is STRICTLY forbidden.  
+
 - [x] Author standalone API client 
 - [x] Add test 1
 - [x] Add test 2
